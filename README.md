@@ -1,1 +1,1 @@
-# klausurplanner
+# klausurplanner FUN
