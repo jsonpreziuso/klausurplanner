@@ -4,4 +4,4 @@ DONE:
 - Projektantrag
 
 TO-DO:
-Kanban-Board
+- Kanban-Board
