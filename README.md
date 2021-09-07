@@ -1,1 +1,7 @@
-# klausurplanner FUN
+# klausurplanner
+
+DONE:
+- Projektantrag
+
+TO-DO:
+Kanban-Board
