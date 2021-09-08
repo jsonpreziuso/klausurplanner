@@ -1,4 +1,4 @@
-TearTable#
+TearTable
 
 DONE:
 - Name und Logo
