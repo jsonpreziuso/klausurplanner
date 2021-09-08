@@ -1,4 +1,4 @@
-TearTable
+Name des Apps - TearTable
 
 DONE:
 - Name und Logo
