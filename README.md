@@ -1,6 +1,4 @@
-# klausurplanner
-
-Name des Apps - TearTable
+TearTable
 
 DONE:
 - Name und Logo
