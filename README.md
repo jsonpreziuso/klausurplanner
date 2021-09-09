@@ -11,3 +11,7 @@ TO-DO:
 - Jason: fängt mit schuelerlogin.js und schulerlogin.js an, sobald Joshua damit fertig ist
 - Jaime und Kadri: Node.js in der zwischenzeit lernen
 - *Nicht vergessen alles zu Dokumentieren*
+
+NODE.JS TUTORIAL:
+https://www.youtube.com/watch?v=TlB_eWDSMt4
+
