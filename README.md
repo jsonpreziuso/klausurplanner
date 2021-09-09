@@ -10,6 +10,9 @@ TO-DO:
 NODE.JS TUTORIAL:
 https://www.youtube.com/watch?v=TlB_eWDSMt4
 
+INSTALLING AND SETTING UP MYSQL TUTORIAL:
+https://www.youtube.com/watch?v=OM4aZJW_Ojs
+
 NODE.JS MYSQL TUTORIAL:
 https://www.youtube.com/watch?v=Eb-jstRRpcA / https://www.youtube.com/watch?v=SyaJSKklH0U
 
