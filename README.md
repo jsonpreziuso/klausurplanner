@@ -15,3 +15,6 @@ TO-DO:
 NODE.JS TUTORIAL:
 https://www.youtube.com/watch?v=TlB_eWDSMt4
 
+NODE.JS SQLITE TUTORTIAL:
+https://www.youtube.com/watch?v=pbplDLLBes8
+
