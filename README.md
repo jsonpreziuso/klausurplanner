@@ -18,6 +18,9 @@ https://www.youtube.com/watch?v=36qsFq1z-4o
 
 
 /////////////////////////////////////////////
+
+
+
 Nur damit anfangen, wenn MySQL geht nicht
 
 
