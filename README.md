@@ -1,10 +1,5 @@
 Name des Apps - TearTable
 
-DONE:
-- Name und Logo
-- Mockup
-- Projektantrag
-
 TO-DO:
 - Backend-Arbeit austeilen
 - Joshua: fängt mit schuelerlogin.html und schuelerlogin.css an
@@ -22,3 +17,5 @@ NODE.JS MYSQL TUTORIAL:
 https://www.youtube.com/watch?v=Eb-jstRRpcA
 https://www.youtube.com/watch?v=SyaJSKklH0U
 
+CONVERTING SQLITE TO MYSQL TUTORIAL:
+https://www.youtube.com/watch?v=XgCraRaS0P4
