@@ -1,10 +1,18 @@
 Name des Apps - TearTable
 
+DONE:
+- schuelerLogin.html
+- lehrerLogin.html
+- schuelerLogin.js
+- lehrerLogin.js
+
 TO-DO:
-- Backend-Arbeit austeilen
-- Joshua: fängt mit schuelerlogin.html und schuelerlogin.css an
-- Jason: fängt mit schuelerlogin.js und schulerlogin.js an, sobald Joshua damit fertig ist
+- *Backend-Arbeit austeilen!!!*
+- Joshua: lehrerVerwaltung.html 
+- Jason: lehrerVerwaltung.js
 - Jaime und Kadri: Node.js in der zwischenzeit lernen
+- Jaime: Datenbank einrichten
+- Jaime oder Kadri: Datenbank Queries im schuelerLogin.js und lehrerLogin.js 
 - *Nicht vergessen alles zu Dokumentieren*
 
 NODE.JS TUTORIAL:
