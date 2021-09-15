@@ -1,5 +1,8 @@
 Name des Apps - TearTable
 
+PROJEKT ABGABE DATUM: 24.11
+PRÄSI DATUM: 30.11
+
 DONE:
 - schuelerLogin.html
 - lehrerLogin.html
