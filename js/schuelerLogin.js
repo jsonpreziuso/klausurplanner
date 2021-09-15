@@ -13,11 +13,11 @@ $(document).ready(function() {
       var passwort = $("#passwortFeld").val();
 
       if(klasse == "" || passwort == ""){
-        alert("Please enter the class name and passwort"); //Translate to german
+        alert("Bitte geben Sie den Klassennamen und das Passwort ein");
       }else if (true) {  //DATABANK QUERIES HERE
         window.location.href='klausurTermine.html';
       }else{
-        alert("Invalid Credentials"); //Translate to german
+        alert("Ungültige Zugangsdaten");
       }
     });
 });
