@@ -13,11 +13,11 @@ $(document).ready(function() {
       var passwort = $("#passwortFeld").val();
 
       if(email == "" || passwort == ""){
-        alert("Please enter your email and passwort"); //Translate to german
+        alert("Bitte geben Sie Ihre E-Mail und Ihr Passwort ein");
       }else if (true) {  //DATABANK QUERIES HERE
         window.location.href='lehrerVerwaltung.html';
       }else{
-        alert("Invalid Credentials"); //Translate to german
+        alert("Ungültige Zugangsdaten");
       }
     });
 });
