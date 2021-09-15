@@ -14,10 +14,13 @@ $(document).ready(function() {
 
       if(email == "" || passwort == ""){
         alert("Bitte geben Sie Ihre E-Mail und Ihr Passwort ein");
-      }else if (true) {  //DATABANK QUERIES HERE
-        window.location.href='lehrerVerwaltung.html';
+      }else if (passwort != "admin" /*HERE WE HAVE TO CHECK IF THE EMAIL EXISTS IN THE DATABASE, AND IF THE PASSWORD IS THE CORRECT PASSWORD FOR THE EMAIL*/) { 
+        window.location.href='lehrerVerwaltung.html'; //HERE WE HAVE TO DIRECT THE LEHRER TO THEIR OWN VERWALTUNG WITH THEIR OWN DETAILS ALREADY INSIDE
+      }else if (passwort == "admin"){
+        window.location.href='admin.html';
       }else{
         alert("Ungültige Zugangsdaten");
       }
+      
     });
 });
