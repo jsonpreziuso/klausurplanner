@@ -1,1 +1,62 @@
 <!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Klasse - Lehrer-Verwaltung - Klausurenverwaltung TearTable</title>
+        <link rel="stylesheet" href="../css/stylesheet.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="navbar">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <h4>Lehrername</h4>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+                        <a href="lehrerLogin.php">Logout</a>
+                    </div>
+                </nav>
+            </div><br>
+            <h1 align="center">Lehrer-Verwaltung</h1><br>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <button id="btnExam" class="btnTeacher" type="button">Klausur</button>
+                    <button id="btnClass" class="btnTeacher selected" type="button">Klasse</button>
+                    <button id="btnMyAccount" class="btnTeacher" type="button">Mein Konto</button>
+                </div>
+            </div>
+            <div class="borderBlack">
+                <div class="borderGray">
+                    <div class="borderBlack content">
+                        <form>
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <label for="KlasseFeld" class="form-label">Klasse</label>
+                                    <input id="KlasseFeld" type="text" class="form-control" />
+                                    
+                                    <label for="passwortFeld" class="form-label">Passwort</label>
+                                    <input id="passwortFeld" type="text" class="form-control" />
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <button id="btnSet" class="form-control" type="button">Eintragen</button>
+                                </div>
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <button id="btnDelete" class="form-control" type="button">Löschen</button>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
