@@ -14,13 +14,89 @@ $(document).ready(function() {
   $("#btnKlasse").click(function() {
     window.location.href='lehrerKlasse.html';
   });
+  $("#btnKlausur").click(function() {
+    window.location.href='lehrerKlausur.html';
+  });
 
   //LOGOUT FUNCTIONALITY
   $("#logout").click(function(){
     //HERE WE NEED TO END THE SESSION VARIABLE ON THE BACKEND
   });
 
-  //KLASSE VERWALTUNG SEITE
+//KLAUSUR VERWALTUNG SEITE
+
+  //SET DEFAULT DATE TO TODAY'S DATE
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var year = now.getFullYear();
+  var today = (year)+"-"+(month)+"-"+(day);
+  $('#datum').val(today);
+
+  //CAPTURE USER INPUTTED DATE AND CONVERT TO DATE OBJECT
+  $('#datum').change(function(){
+    var datum = $("#datum").val();
+    datum = new Date(datum);
+    var datumDay = ("0" + datum.getDate()).slice(-2);
+    var datumMonth = ("0" + (datum.getMonth() + 1)).slice(-2);
+    var datumYear = datum.getFullYear();
+    datum = (datumYear)+"-"+(datumMonth)+"-"+(datumDay);
+
+    //DATE INPUT VALIDATION
+    if(datumYear > year+5){
+      alert("Klausuren, die länger als 5 Jahre in der Zukunft stattfinden sollen, können nicht erstellt werden");
+      $("#datum").css("background-color","lightcoral");
+      $('#datum').val(today);
+    }
+  });
+
+  $("#btnKlausurEintragen").click(function() {
+
+    //RESET BACKGROUND COLOURS BACK TO WHITE
+    $("#klausurKlasse").css("background-color","white");
+    $("#fachFeld").css("background-color","white");
+    $("#datum").css("background-color","white");
+    $("#schulStunde").css("background-color","white");
+    $("#raumNrFeld").css("background-color","white");
+    $("#themenFeld").css("background-color","white");
+
+    //SAVE ALL USER INPUT INTO VARIABLES
+    var klausurKlasse = $("#klausurklasse").val();
+    var fach = $("#fachFeld").val();
+    var datum = $("#datum").val();
+    var schulStunde = $("#schulStunde").val();
+    var raumNr = $("#raumNrFeld").val();
+    var themen = $("#themenFeld").val();
+
+    //VALIDATE USER INPUT
+    if(fach == ""){
+      alert("Bitte geben Sie ein Fach ein");
+      $("#fachFeld").css("background-color","lightcoral");
+    }else if(datum < today){
+      alert("Ihr ausgewähltes Datum darf nicht in der Vergangenheit liegen");
+      $("#datum").css("background-color","lightcoral");
+    }else if(raumNr == ""){
+      alert("Bitte geben Sie eine Raumnummer ein");
+      $("#raumNrFeld").css("background-color","lightcoral");
+    }else if(themen == ""){
+      alert("Bitte geben Sie das Prüfungsthema ein");
+      $("#themenFeld").css("background-color","lightcoral");
+    }else if(false/* SQL QUERY TO CHECK IF THIS KLAUSUR ALREADY EXISTS IN THE DATABASE*/){
+      alert("Diese Klausur existiert bereits");
+    }else{
+      alert("Ihre Klausur wurde erfolgreich hinzugefügt");
+      $("#klausurKlasse").css("background-color","lightgreen");
+      $("#fachFeld").css("background-color","lightgreen");
+      $("#datum").css("background-color","lightgreen");
+      $("#schulStunde").css("background-color","lightgreen");
+      $("#raumNrFeld").css("background-color","lightgreen");
+      $("#themenFeld").css("background-color","lightgreen");
+      //HERE UPDATE THE DATABASE WITH THE NEWLY ENTERED DATA
+      //LEHRER NACHNAME ALSO HAS TO BE TAKEN FROM THE BACKEND AND ADDED TO THE DATABASE ENTRY
+    }
+  });
+
+//KLASSE VERWALTUNG SEITE
   $("#btnEintragen").click(function() {
     var klasse = $("#klasseFeld").val();
     var passwort = $("#passwortFeld").val();
@@ -50,9 +126,10 @@ $(document).ready(function() {
       alert("Ihre ausgewählte Klasse wurde erfolgreich gelöscht");
     }
   */
+
   });
 
-  //MEIN-KONTO VERWALTUNG SEITE
+//MEIN-KONTO VERWALTUNG SEITE
   $("#btnChange").click(function() {
 
     //RESET BACKGROUND COLOURS BACK TO WHITE
