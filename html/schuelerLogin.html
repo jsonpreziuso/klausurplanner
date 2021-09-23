@@ -13,6 +13,7 @@
     <body>
         <div class="container-fluid d-flex justify-content-center align-items-center center">
             <div class="container-fluid" align="center">
+                <img src="../img/teartablelogo.png" alt="TearTable Logo" width="auto" height="100px">
                 <h2>Schüler-Login</h2>
                 <a href="lehrerLogin.html">zum Lehrer-Login</a><br>
                 <form><br>
@@ -41,13 +42,24 @@
                         </div>
                     </div><br>
                     <div class"container-fluid">
-                        <div class="row">
+                        <!-- md, lg, xl -->
+                        <div class="row d-none d-md-block d-lg-block d-xl-block">
                             <div class="col-xs-5 col-sm-5 colmd-5 col-lg-5">
                             </div>
                             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                                 <button id="btnLogin" class="form-control" type="button">Anmelden</button>
                             </div>
                             <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                            </div>
+                        </div>
+                        <!-- sm, xs -->
+                        <div class="row d-block d-md-none d-lg-none d-xl-none">
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                <button id="btnLogin" class="form-control" type="button">Anmelden</button>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             </div>
                         </div>
                     </div>
