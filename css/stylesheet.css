@@ -6,7 +6,11 @@
     text-align: right;
 }
 
-@media only screen and (max-width: 600px) {
+.label-admin {
+    text-align: center;
+}
+
+@media only screen and (max-width: 575px) {
     .label {
         text-align: center;
     }
@@ -15,15 +19,17 @@
 .navbar {
     border: black solid;
     top: 0;
-    border-width: 1px;
+    border-width: 2px;
 }
 
-.btnTeacher {
+.btnLehrer {
     background-color: #778899;
     border-top: black solid 2px;
     border-left: black solid 2px;
     border-right: black solid 2px;
-    border-radius: 0 15px 0 0;
+    border-radius: 0 17px 0 0;
+    height: 50px;
+    width: 100px;
 }
 
 .borderBlack {
@@ -36,6 +42,11 @@
 
 .content {
     padding: 15px;
+}
+
+.rahmenInhalt {
+    background-color: #778899;
+    padding-top: 10px;
 }
 
 .selected {
