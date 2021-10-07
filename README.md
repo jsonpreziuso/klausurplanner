@@ -3,19 +3,13 @@ Name des Apps - TearTable
 PROJEKT ABGABE DATUM: 24.11 / 
 PRÄSI DATUM: 30.11
 
-DONE:
-- schuelerLogin.html
-- lehrerLogin.html
-- schuelerLogin.js
-- lehrerLogin.js
-
 TO-DO:
 - *Backend-Arbeit austeilen!!!*
-- Joshua: lehrerVerwaltung.html 
-- Jason: lehrerVerwaltung.js
+- Joshua: tabellen mit dummy daten
+- Jason: funktionalität für die tabellen
 - Jaime und Kadri: Node.js in der zwischenzeit lernen
 - Jaime: Datenbank einrichten
-- Jaime oder Kadri: Datenbank Queries im schuelerLogin.js und lehrerLogin.js 
+- Jaime oder Kadri: Session variablen für logins lernen (so the teacher gets redirected to THEIR page when logged in and not a general page)
 - *Nicht vergessen alles zu Dokumentieren*
 
 NODE.JS TUTORIAL:
