@@ -12,9 +12,9 @@ $(document).ready(function() {
       var klasse = $("#klasseFeld").val();
       var passwort = $("#passwortFeld").val();
 
-      if(klasse == "" || passwort == ""){
+      if(klasse.trim() == "" || passwort.trim() == ""){
         alert("Bitte geben Sie den Klassennamen und das Passwort ein");
-      }else if (true /*HERE WE HAVE TO CHECK IF THE KLASSE EXISTS IN THE DATABASE, AND IF THE PASSWORD IS THE CORRECT PASSWORD FOR THE KLASSE*/) {
+      }else if (true) {  //DATABANK QUERIES HERE
         window.location.href='klausurTermine.html';
       }else{
         alert("Ungültige Zugangsdaten");
