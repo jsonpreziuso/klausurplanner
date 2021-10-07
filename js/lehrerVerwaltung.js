@@ -7,7 +7,10 @@ LF6 - Herr Grüning
 */
 
 $(document).ready(function() {
-  //NAVIGATION TABS
+  //INSERTION OF LEHRERNAME
+  //$("#lehrerName").val() == USE BACKEND SESSION VARIABLE TO GET THE LEHRERNAME AND SET IT HERE
+
+  //TABS
   $("#btnMeinKonto").click(function() {
     window.location.href='lehrerMeinKonto.html';
   });
@@ -17,6 +20,10 @@ $(document).ready(function() {
   $("#btnKlausur").click(function() {
     window.location.href='lehrerKlausur.html';
   });
+
+  //SET LEHRER NAME IN THE NAVBAR
+  //HERE THE SIGNED IN LEHRER'S NAME MUST BE TAKEN FROM DATABASE AND SET IN $("#lehrerTitelName")
+  $("#lehrerTitelName").text("LEHRER NAME")
 
   //LOGOUT FUNCTIONALITY
   $("#logout").click(function(){
@@ -69,16 +76,16 @@ $(document).ready(function() {
     var themen = $("#themenFeld").val();
 
     //VALIDATE USER INPUT
-    if(fach == ""){
+    if(fach.trim() == ""){
       alert("Bitte geben Sie ein Fach ein");
       $("#fachFeld").css("background-color","lightcoral");
     }else if(datum < today){
       alert("Ihr ausgewähltes Datum darf nicht in der Vergangenheit liegen");
       $("#datum").css("background-color","lightcoral");
-    }else if(raumNr == ""){
+    }else if(raumNr.trim() == ""){
       alert("Bitte geben Sie eine Raumnummer ein");
       $("#raumNrFeld").css("background-color","lightcoral");
-    }else if(themen == ""){
+    }else if(themen.trim() == ""){
       alert("Bitte geben Sie das Prüfungsthema ein");
       $("#themenFeld").css("background-color","lightcoral");
     }else if(false/* SQL QUERY TO CHECK IF THIS KLAUSUR ALREADY EXISTS IN THE DATABASE*/){
@@ -101,7 +108,7 @@ $(document).ready(function() {
     var klasse = $("#klasseFeld").val();
     var passwort = $("#passwortFeld").val();
 
-    if(klasse == "" || passwort == ""){
+    if(klasse.trim() == "" || passwort.trim() == ""){
       alert("Bitte geben Sie einen Klassennamen und ein Passwort ein");
     }else if(true/*ADD SQL QUERIES HERE TO CHECK IF A CLASS WITH THIS NAME ALREADY EXISTS IN THE DATABASE*/){
       alert("Eine Klasse mit diesem Namen existiert bereits");
@@ -148,20 +155,23 @@ $(document).ready(function() {
     var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
     //VALIDATE INPUTTED DATA
-    if(vorname == ""){
+    if(vorname.trim() == ""){
       alert("Bitte geben Sie Ihre Vorname ein");
       $("#vornameFeld").css("background-color","lightcoral");
-    }else if(nachname == ""){
+    }else if(nachname.trim() == ""){
       alert("Bitte geben Sie Ihre Nachname ein");
       $("#nachnameFeld").css("background-color","lightcoral");
     }else if(email == "" || !emailReg.test(email)){
       alert("Bitte geben Sie eine gültige Email-Adresse ein");
       $("#emailFeld").css("background-color","lightcoral");
-    }else if(passwort == "" || wiederholenPasswort != passwort){
+    }else if(passwort.trim() == "" || passwort.trim() == "admin"){
+      alert("Ungültiges Passwort");
+      $("#passwortFeld").css("background-color","lightcoral");
+    }else if(wiederholenPasswort != passwort){
       alert("Ihre Passwörter stimmen nicht überein");
       $("#passwortFeld").css("background-color","lightcoral");
       $("#wiederholenPasswortFeld").css("background-color","lightcoral");
-    }else if(true/* SQL QUERY TO CHECK IF A USER WITH THE SAME LOGIN DATA ALREADY EXISTS IN THE DATABASE*/){
+    }else if(false/* SQL QUERY TO CHECK IF A USER WITH THE SAME LOGIN DATA ALREADY EXISTS IN THE DATABASE*/){
       alert("Ihre ausgewählten Zugangsdaten sind nicht verfügbar");
     }else{
       alert("Ihre Zugangsdaten wurden erfolgreich aktualisiert");
