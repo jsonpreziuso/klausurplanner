@@ -37,14 +37,17 @@
                 <div class="borderGray">
                     <div class="borderBlack content">
                         <form>
-                            <div class="row">
-                                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                </div>
-                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                    <input id="suchFeld" type="text" class="form-control" />
-                                </div>
-                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                    <button id="btnSuchen" class="form-control" type="button">Suchen</button>
+                            <!-- sm, md, lg, xl -->
+                            <div class="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                <div class="row">
+                                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <input id="suchFeld" type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <button id="btnSuchen" class="form-control" type="button">Suchen</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -90,8 +93,58 @@
                                     
                                     <button id="btnKlausurEintragen" class="form-control" type="button">Eintragen</button>
                                 </div>
-                                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-                                    rechte Spalte
+                                <!-- xs -->
+                                <div class="d-block d-sm-none d-md-none d-lg-none d-xl-none"><br><br>
+                                    <input id="suchFeld" type="text" class="form-control" /><br>
+                                    <button id="btnSuchen" class="form-control" type="button">Suchen</button>
+                                </div>
+                                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7"><br>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <caption hidden="true">Liste aller Klausurtermine</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Klasse</th>
+                                                    <th scope="col">Fach</th>
+                                                    <th scope="col">Lehrer</th>
+                                                    <th scope="col">Datum</th>
+                                                    <th scope="col">Stunde</th>
+                                                    <th scope="col">Raum-Nr.</th>
+                                                    <th scope="col">Thema</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>12ITa</td>
+                                                    <td>Deutsch</td>
+                                                    <td>Horn</td>
+                                                    <td>12.02.2025</td>
+                                                    <td>1. Stunde</td>
+                                                    <td>B517</td>
+                                                    <td>Argumentation</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>11ITa</td>
+                                                    <td>LF10</td>
+                                                    <td>Blam</td>
+                                                    <td>12.02.2025</td>
+                                                    <td>3. Stunde</td>
+                                                    <td>B517</td>
+                                                    <td>Subnetting</td>
+                                            </tbody>
+                                        </table>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <button id="btnAlleAuswaelen" class="form-control" type="button">Alle Auswählen</button><br>
+                                        </div>
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <button id="btnKlausurLoeschen" class="form-control" type="button">Bearbeiten</button><br>
+                                        </div>
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <button id="btnKlausurEintragen" class="form-control" type="button">Löschen</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
