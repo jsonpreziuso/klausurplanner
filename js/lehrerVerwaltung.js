@@ -23,7 +23,7 @@ $(document).ready(function() {
 
   //SET LEHRER NAME IN THE NAVBAR
   //HERE THE SIGNED IN LEHRER'S NAME MUST BE TAKEN FROM DATABASE AND SET IN $("#lehrerTitelName")
-  $("#lehrerTitelName").text("LEHRER NAME")
+  $("#lehrerTitelName").text("TearTable - " + "LEHRER NAME")
 
   //LOGOUT FUNCTIONALITY
   $("#logout").click(function(){
