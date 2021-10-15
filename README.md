@@ -5,10 +5,11 @@ PRÄSI DATUM: 30.11
 
 TO-DO:
 - *Backend-Arbeit austeilen!!!*
-- Joshua: tabellen mit dummy daten
-- Jason: funktionalität für die tabellen
-- Jaime und Kadri: Node.js in der zwischenzeit lernen
-- Jaime: Datenbank einrichten
+- Joshua: Suchfunktion löschen (es ist bereit mit jQuery DataTables implementiert)
+- Jason: Stand-By
+- Jaime und Kadri: Verbindung zum backend mit Node.js implementieren
+- Jaime: Datenbank mit dummy-daten einrichten
+- Kadri: Versuch mal ob du mit node.js/SQL dummy daten aus dem Datenbank kriegen kannst, und danach in einer Tabelle anzeigen (lehrerKlasse is the most lightweight to test on)
 - Jaime oder Kadri: Session variablen für logins lernen (so the teacher gets redirected to THEIR page when logged in and not a general page)
 - *Nicht vergessen alles zu Dokumentieren*
 
