@@ -130,12 +130,70 @@ $(document).ready(function() {
 
   //ALLELOESCHEN-FUNKTION
   $("#btnAlleLoeschen").click(function(){
-    if(confirm("Möchten Sie wirklich alle Einträge aus der Datenbank löschen")){
+    if(confirm("Möchten Sie wirklich alle Klausuren aus der Datenbank löschen")){
 
       //IF YES THEN DELETE ALL DATABASE ENTIRES
 
       //DATATABLE.RELOAD();
       alert("Alle Klausuren wurden erfolgreich gelöscht");
+    }
+  });
+
+  //ZEITRAUMLOESCHEN-FUNKTION
+
+  //SET DEFAULT DATE TO TODAY'S FOR datumBeginn and datumsEnde
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var year = now.getFullYear();
+  var today = (year)+"-"+(month)+"-"+(day);
+  $('#datumBeginn').val(today);
+
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var year = now.getFullYear();
+  var today = (year)+"-"+(month)+"-"+(day);
+  $('#datumEnde').val(today);
+
+  //TURN DATUMBEGINN INTO A DATE OBJECT
+  $('#datumBeginn').change(function(){
+    var datumBeginn = $("#datumBeginn").val();
+    datumBeginn = new Date(datumBeginn);
+    var datumBeginnDay = ("0" + datumBeginn.getDate()).slice(-2);
+    var datumBeginnMonth = ("0" + (datumBeginn.getMonth() + 1)).slice(-2);
+    var datumBeginnYear = datumBeginn.getFullYear();
+    datumBeginn = (datumBeginnYear)+"-"+(datumBeginnMonth)+"-"+(datumBeginnDay);
+    });
+    //TURN DATUMENDE INTO A DATE OBJECT
+  $('#datumEnde').change(function(){
+    var datumEnde = $("#datumEnde").val();
+    datumEnde = new Date(datumEnde);
+    var datumEndeDay = ("0" + datumEnde.getDate()).slice(-2);
+    var datumEndeMonth = ("0" + (datumEnde.getMonth() + 1)).slice(-2);
+    var datumEndeYear = datumEnde.getFullYear();
+    datumEnde = (datumEndeYear)+"-"+(datumEndeMonth)+"-"+(datumEndeDay);
+  });
+
+  //ZeitraumLoeschen BUTTON CLICKED
+  $("#btnZeitraumLoeschen").click(function(){
+
+    $("#datumBeginn").css("background-color","white");
+    $("#datumEnde").css("background-color","white");
+
+    if($("#datumEnde").val() < $("#datumBeginn").val()){
+      alert("Ihr ausgewähltes Ende-Datum darf nicht früher als dein Beginn-Datum sein");
+      $("#datumBeginn").css("background-color","lightcoral");
+      $("#datumEnde").css("background-color","lightcoral");
+    }else{
+      if(confirm("Möchten Sie wirklich alle Klausuren zwischen " + $("#datumBeginn").val() + " und " + $("#datumEnde").val() +  " aus der Datenbank löschen?")){
+
+        //IF YES THEN DELETE ALL DATABASE ENTRIES BETWEEN THE 2 SELECTED DATES
+        $("#datumBeginn").css("background-color","lightgreen");
+        $("#datumEnde").css("background-color","lightgreen");
+        alert("Alle Klausuren zwischen " + $("#datumBeginn").val() + " und " + $("#datumEnde").val() + " wurden erfolgreich gelöscht");
+        //DATATABLE.RELOAD();
+      }
     }
   });
 
