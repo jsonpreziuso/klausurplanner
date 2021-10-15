@@ -13,12 +13,14 @@ LF6 - Herr Grüning
         <title>Klausur - Lehrer-Verwaltung - Klausurenverwaltung TearTable</title>
         <link rel="stylesheet" href="../css/stylesheet.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" >
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
-        <script src="../js/lehrerVerwaltung.js" defer></script>
+        <script src="../js/lehrerKlausur.js" defer></script>
         <script src="../js/generalJs.js" defer></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js" integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js" defer></script>
         <script defer src="../lib/fontawesome-free-5.15.4-web/js/all.js"></script>
     </head>
 
@@ -67,22 +69,22 @@ LF6 - Herr Grüning
                                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                                     <label for="klausurKlasse" class="form-label">Klasse</label>
                                     <select id="klausurKlasse" class="form-control form-select">
-                                        <option value="10ita">10ITa</option>
-                                        <option value="11ita">11ITa</option>
-                                        <option value="12ita">12ITa</option>
-                                        <option value="10itb">10ITb</option>
+                                        <option value="10ITa">10ITa</option>
+                                        <option value="11ITa">11ITa</option>
+                                        <option value="12ITa">12ITa</option>
+                                        <option value="10ITb">10ITb</option>
                                     </select>
-                                    
+
                                     <label for="fachFeld" class="form-label">Fach</label>
                                     <input id="fachFeld" type="text" class="form-control" />
-                                    
+
                                     <label for="datum">Datum</label>
                                     <input id="datum" type="date" class="form-control">
-                                    
+
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                             <label for="schulStunde" class="form-label">Schulstunde</label>
-                                            <select id="schulStunde" class="selectpicker form-control form-select" multiple>
+                                            <select id="schulStunde" class="form-control form-select">
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -100,10 +102,10 @@ LF6 - Herr Grüning
                                             <input id="raumNrFeld" type="text" class="form-control" />
                                         </div>
                                     </div>
-                                    
+
                                     <label for="themenFeld" class="form-label">Themen</label>
                                     <textarea id="themenFeld" type="texta" class="form-control"></textarea><br>
-                                    
+
                                     <button id="btnKlausurEintragen" class="form-control" type="button">Eintragen</button>
                                 </div>
                                 <!-- xs -->
@@ -114,20 +116,20 @@ LF6 - Herr Grüning
                                 <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7"><br>
                                     <div class="row">
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <button id="btnAlleAuswaelen" class="form-control" type="button">Alle Auswählen</button><br>
+                                            <button id="btnKlausurAendern" class="form-control" type="button">Ändern</button><br>
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <button id="btnKlausurLoeschen" class="form-control" type="button">Ändern</button><br>
+                                            <button id="btnKlausurLoeschen" class="form-control" type="button">Löschen</button><br>
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <button id="btnKlausurEintragen" class="form-control" type="button">Löschen</button><br>
+                                            <button id="btnAlleLoeschen" class="form-control" type="button">Alle Löschen</button><br>
                                         </div>
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-hover">
+                                        <table id="lehrerKlausurTabelle" class="table table-bordered table-hover">
                                             <caption hidden="true">Liste aller Klausurtermine</caption>
                                             <thead>
-                                                <tr>
+                                                <tr id="headerRow">
                                                     <th scope="col">Klasse</th>
                                                     <th scope="col">Fach</th>
                                                     <th scope="col">Lehrer</th>
@@ -142,8 +144,8 @@ LF6 - Herr Grüning
                                                     <td>12ITa</td>
                                                     <td>Deutsch</td>
                                                     <td>Horn</td>
-                                                    <td>12.02.2025</td>
-                                                    <td>1. Stunde</td>
+                                                    <td>2025-12-11</td>
+                                                    <td>1</td>
                                                     <td>B517</td>
                                                     <td>Argumentation</td>
                                                 </tr>
@@ -151,8 +153,8 @@ LF6 - Herr Grüning
                                                     <td>11ITa</td>
                                                     <td>LF10</td>
                                                     <td>Blam</td>
-                                                    <td>12.02.2025</td>
-                                                    <td>3. Stunde</td>
+                                                    <td>2025-12-05</td>
+                                                    <td>3</td>
                                                     <td>B517</td>
                                                     <td>Subnetting</td>
                                             </tbody>
@@ -176,7 +178,7 @@ LF6 - Herr Grüning
                 </div>
             </div>
             <div id="overlay" onclick="overlayOff()">
-                <div id="text">
+              <div id="text">
                     <h1>Hilfe-Bereich</h1><br><br>
                     <h2>Beschreibung</h2>
                     <p>Diese Seite dient zur Anzeige, Erstellung, Bearbeitung und Löschung aller Klausurtermine.</p>
