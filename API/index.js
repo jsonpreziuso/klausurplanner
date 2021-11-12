@@ -98,6 +98,51 @@ app.get('/api/teachers/:id' ,async (req,res, next) =>{
         res.sendStatus(500);
     }
 })
+
+// Create & insert new teacher in teacher's table 
+app.post('/api/teachers/', async (req,res,next) =>{
+    try {
+        var body = req.body;
+        console.log('body', body)
+        var teacher = await db.insertTeacher(body);
+        res.status(204).json(teacher);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(400);
+    }
+})
+
+
+// update teacher's info for a given id 
+app.put('/api/teachers/:id',async (req,res) =>{
+    try {
+        var body = req.body;
+        var id = req.params.id;
+        console.log('body',body);
+        console.log('id',id);
+        var teacher = await db.updateTeacherById(body,id);
+        res.sendStatus(204);
+    } catch (e) {
+        console.log(e); 
+        res.sendStatus(400);  
+    }
+})
+
+// delete teacher's info for a given id
+app.delete('/api/teachers/:id',async (req,res) =>{
+    try {
+        var id = req.params.id;
+        //console.log('body',body);
+        console.log('id',id);
+        var teacher = await db.deleteTeacherById(id);
+        res.sendStatus(204);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(400);
+    }
+})
+
+
 /*
 app.post('/api/teachers',async (req,res,next) =>{
     try {
@@ -127,14 +172,11 @@ app.post('/api/teachers',async (req,res,next) =>{
 
 
 
-
-
-
 app.get('/', (req, res)=>{
      res.send('Hello world');
 });
 
-
+/*
 app.get('/api/exams', (req,res) => {
  //In real scenario here you get a list of exams from DB as return value   
  // By now, we are going to create the endpoints
@@ -176,6 +218,10 @@ app.post('/api/exams', (req,res) => {
     //Return the same deleted exam
     res.send(exam);
  })
+*/
+
+
+
 
 //PORT 
 const port = process.env.PORT || 3000;

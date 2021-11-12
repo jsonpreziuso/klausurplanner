@@ -101,7 +101,40 @@ db.getTeacherById = (id) => {
     })
 }
 
+db.insertTeacher = (body) => {
+    return new Promise ((resolve,reject) => {
+        mysqlConnection.query('INSERT INTO lehrer(admin,vorname,nachname,email,passwort) VALUES (?,?,?,?,?)',
+        [body.admin,body.vorname,body.nachname,body.email,body.passwort],(error,body) => {
+            if (error) {
+                return reject(error);
+            }
+           return resolve (body);
+        } );   
+    })
+}
 
+db.updateTeacherById = (body,id) => {
+    return new Promise ((resolve,reject) => {
+        mysqlConnection.query('UPDATE lehrer SET admin= ?,vorname= ?,nachname=?,email=?,passwort=?  WHERE idlehrer =?',id,(error,teacher)
+        [body.admin,body.vorname,body.nachname,body.email,body.passwort,id],(error,body) => {
+            if (error) {
+                return reject(error);
+            }
+           return resolve (body); 
+        })
+    })
+}
+
+db.deleteTeacherById = (id) => {
+    return new Promise ((resolve,reject) => {
+        mysqlConnection.query('DELETE FROM lehrer WHERE idlehrer= ?',id,(error,teacher) =>{
+            if(error){
+                return reject(error);
+            }
+            return resolve (teacher);
+        })
+    })
+}
 
 module.exports = mysqlConnection;
 module.exports = db;
