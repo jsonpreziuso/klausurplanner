@@ -1,191 +1,278 @@
-<!--
-Joshua Zacherl
+/*
+Jason Preziuso
 12ITa
-11.10.2021
-Projekt Klausurenplaner
+15.10.2021
+Klausurplanner Projekt
 LF6 - Herr Grüning
--->
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Klausur - Lehrer-Verwaltung - Klausurenverwaltung TearTable</title>
-        <link rel="stylesheet" href="../css/stylesheet.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-        <link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" >
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
-        <script src="../js/lehrerKlausur.js" defer></script>
-        <script src="../js/generalJs.js" defer></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js" integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js" defer></script>
-        <script defer src="../lib/fontawesome-free-5.15.4-web/js/all.js"></script>
-    </head>
+*/
+$(document).ready(function() {
+  //INSERTION OF LEHRERNAME IN HEADER
+  $("#lehrerTitelName").text("TearTable - " + localStorage.getItem('lehrerVorname') + " " + localStorage.getItem('lehrerNachname'));
 
-    <body>
-        <div class="container-fluid">
-            <div class="row">
-                <nav class="navbar">
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                        <h4 id="lehrerTitelName"><a href="lehrerKlausur.html" class="link">TearTable</a> - Lehrername</h4>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="center">
-                        <a href="lehrerKlausur.html"><img src="../img/teartablelogo.png" alt="TearTable Logo" width="auto" height="36px"></a>
-                    </div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" align="right">
-                        <a id="logout" href="lehrerLogin.html">Logout</a>
-                    </div>
-                </nav>
-            </div><br>
-            <h1 align="center">Lehrer-Verwaltung</h1><br>
-            <i class="fas fa-info-circle" id="icon" onclick="overlayOn()"></i>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <button id="btnKlausur" class="btnLehrer selected" type="button">Klausur</button>
-                    <button id="btnKlasse" class="btnLehrer" type="button">Klasse</button>
-                    <button id="btnMeinKonto" class="btnLehrer" type="button">Mein Konto</button>
-                </div>
-            </div>
-            <div class="borderBlack">
-                <div class="borderGray">
-                    <div class="borderBlack content">
-                        <form>
-                            <!-- sm, md, lg, xl -->
-                            <div class="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                                <div class="row">
-                                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                    <label for="klausurKlasse" class="form-label">Klasse</label>
-                                    <select id="klausurKlasse" class="form-control form-select">
-                                        <option value="10ITa">10ITa</option>
-                                        <option value="11ITa">11ITa</option>
-                                        <option value="12ITa">12ITa</option>
-                                        <option value="10ITb">10ITb</option>
-                                    </select>
+  //LOGOUT FUNCTIONALITY
+  $("#logout").click(function(){
+    localStorage.setItem('lehrerVorname',"");
+    localStorage.setItem('lehrerNachname',"");
+    localStorage.setItem('lehrerEmail',"");
+    localStorage.setItem('lehrerId',"");
+    localStorage.setItem('lehrerAdmin',"");
+  });
 
-                                    <label for="fachFeld" class="form-label">Fach</label>
-                                    <input id="fachFeld" type="text" class="form-control" />
+  //AUTOFILL DATATABLE
+  examData = {};
+  $.get("http://localhost:8080/api/exams", function( data ) {
+    examData = data;
+    $('#lehrerKlausurTabelle').DataTable({
+          "processing" : true,
+          "ajax" : {
+              "url" : "http://localhost:8080/api/exams",
+              dataSrc : ''
+          },
+          "columns" : [ {
+              "data" : "idklausuren"
+          },{
+              "data" : "lehrername"
+          },{
+              "data" : "klassename"
+          },{
+              "data" : "fach"
+          },{
+              "data" : "datum"
+          },{
+              "data" : "schulestunde"
+          },{
+              "data" : "raumnummer"
+          },{
+              "data" : "thema"
+          }]
+    });
+  });
 
-                                    <label for="datum">Datum</label>
-                                    <input id="datum" type="date" class="form-control">
+  //FILL CLASS SELECTOR
+  $.get("http://localhost:8080/api/classes", function( data ) {
+    for(i of data){
+      $('#klausurKlasse').append($('<option>', {
+        value: i.name,
+        text: i.name
+      }));
+    }
+  });
 
-                                    <div class="row">
-                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                            <label for="schulStunde" class="form-label">Schulstunde</label>
-                                            <select id="schulStunde" class="form-control form-select">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
-                                                <option value="10">10</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                            <label for="raumNrFeld" class="form-label">Raum-Nr.</label>
-                                            <input id="raumNrFeld" type="text" class="form-control" />
-                                        </div>
-                                    </div>
+  //SET DEFAULT DATE TO TODAY'S DATE
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var year = now.getFullYear();
+  var today = (year)+"-"+(month)+"-"+(day);
+  $('#datum').val(today);
 
-                                    <label for="themenFeld" class="form-label">Themen</label>
-                                    <textarea id="themenFeld" type="texta" class="form-control"></textarea><br>
+  //HIGHLIGHT DATATABLE ROW ON SELECT
+  var klausurSelected = false;
+  $('#lehrerKlausurTabelle').on("click","td",function(){
+    klausurSelected = true;
+    $('#lehrerKlausurTabelle tr').css("background-color","");
+    $('#lehrerKlausurTabelle tr').removeAttr("class");
+    $(this).parent().css("background-color","#a5dee8");
+    $(this).parent().attr("class","selectedTrue");
 
-                                    <button id="btnKlausurEintragen" class="form-control" type="button">Eintragen</button><br>
-                                </div>
-                                <!-- xs -->
-                                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7"><br>
-                                    <div class="row">
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <button id="btnKlausurAendern" class="form-control" type="button">Ändern</button><br>
-                                        </div>
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <button id="btnKlausurLoeschen" class="form-control" type="button">Löschen</button><br>
-                                        </div>
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <button id="btnAlleLoeschen" class="form-control" type="button">Alle Löschen</button><br>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table id="lehrerKlausurTabelle" class="table table-bordered table-hover">
-                                            <caption hidden="true">Liste aller Klausurtermine</caption>
-                                            <thead>
-                                                <tr id="headerRow">
-                                                    <th scope="col">Klasse</th>
-                                                    <th scope="col">Fach</th>
-                                                    <th scope="col">Lehrer</th>
-                                                    <th scope="col">Datum</th>
-                                                    <th scope="col">Stunde</th>
-                                                    <th scope="col">Raum-Nr.</th>
-                                                    <th scope="col">Thema</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>12ITa</td>
-                                                    <td>Deutsch</td>
-                                                    <td>Horn</td>
-                                                    <td>2025-12-11</td>
-                                                    <td>1</td>
-                                                    <td>B517</td>
-                                                    <td>Argumentation</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>11ITa</td>
-                                                    <td>LF10</td>
-                                                    <td>Blam</td>
-                                                    <td>2025-12-05</td>
-                                                    <td>3</td>
-                                                    <td>B517</td>
-                                                    <td>Subnetting</td>
-                                            </tbody>
-                                        </table>
-                                    </div><br>
-                                    <div class="row">
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <input id="datumBeginn" type="date" class="form-control"><br>
-                                        </div>
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <input id="datumEnde" type="date" class="form-control"><br>
-                                        </div>
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <button id="btnZeitraumLoeschen" class="form-control" type="button">Zeitraum Löschen</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div id="overlay" onclick="overlayOff()">
-                <div id="text">
-                    <h1>Hilfe-Bereich</h1><br><br>
-                    <h2>Beschreibung</h2>
-                    <p>Diese Seite dient zur Anzeige, Erstellung, Bearbeitung und Löschung aller Klausurtermine.</p>
-                    <p>Sie können die bereits angelegten Klausurtermine durchsuchen.</p><br>
-                    <h2>Funktionalitäten</h2>
-                    <p><b>Eintragen:</b> Nach dem Ausfüllen des Formulars auf der linken Seite und das Bestätigen über den Knopf <em>Eintragen</em> wird die Tabelle um diesen Eintrag erweitert.</p>
-                    <p><b>Alle Auswählen:</b> Alle Tabellenzeilen werden markiert. So ist es möglich alle Klausurtermine auf einmal zu löschen.</p>
-                    <p><b>Ändern:</b> Nach Auswahl eines Eintrags in der Tabelle, dem Bearbeiten des Formulars und dem Bestätigen über den Knopf <em>Ändern</em> werden alle Anpassungen in der Datenbank übernommen.</p>
-                    <p><b>Löschen:</b> Nach der Auswahl eines Eintrags in der Tabelle und dem Bestätigen über den Knopf <em>Löschen</em> wird dieser aus der Datenbank entfernt.</p>
-                    <p><b>Zeitraum Löschen:</b> Nach der Auswahl der zwei Daten und dem Bestätigen über den Knopf <em>Zeitraum Löschen</em> werden alle Klausurtermine in diesem Zeitraum aus der Datenbank enfernt.</p>
-                    <p><b>Suchen:</b> Nach Eingabe in das Suchfeld und das Bestätigen mit dem Knopf <em>Suchen</em> wird die darunterliegende Tabelle durchsuchen.</p>
-                    <p><b>Logout:</b> Sie werden von Ihrer Sitzung abgemeldet und zurück auf die Anmeldeseite geleitet.</p>
-                </div>
-            </div>
-        </div>
-    <script>
-//        $('select').selectpicker();
-    </script>
-    </body>
-</html>
+    //AUTOFILL SELECTED ROW DATA INTO FIELDS
+    $("#klausurKlasse").val($(".selectedTrue").children().siblings().eq(2).text());
+    $("#fachFeld").val($(".selectedTrue").children().siblings().eq(3).text());
+    $("#datum").val($(".selectedTrue").children().siblings().eq(4).text());
+    $("#schulStunde").val($(".selectedTrue").children().siblings().eq(5).text());
+    $("#raumNrFeld").val($(".selectedTrue").children().siblings().eq(6).text());
+    $("#themenFeld").val($(".selectedTrue").children().siblings().eq(7).text());
+  });
+
+  //KLAUSUR-AENDERN-FUNKTION
+  $("#btnKlausurAendern").click(function(){
+
+    //VISUAL COLOUR FEEDBACK
+    $("#klausurKlasse").css("background-color","white");
+    $("#fachFeld").css("background-color","white");
+    $("#datum").css("background-color","white");
+    $("#schulStunde").css("background-color","white");
+    $("#raumNrFeld").css("background-color","white");
+    $("#themenFeld").css("background-color","white");
+
+    //MAKE SURE A KLAUSUR IS SELECTED
+    if (!klausurSelected){
+      alert("Bitte wählen Sie eine Klausur aus");
+    }else{
+      if(confirm("Möchten Sie die " + $(".selectedTrue").children().siblings().eq(1).text() + " " + $(".selectedTrue").children().siblings().eq(2).text() + " Klausur wirklich ändern?")){
+
+        //SAVE ALL USER INPUT INTO VARIABLES
+        var klausurKlasse = $("#klausurKlasse").val();
+        var fach = $("#fachFeld").val();
+        var datum = $("#datum").val();
+        var schulStunde = $("#schulStunde").val();
+        var raumNr = $("#raumNrFeld").val();
+        var themen = $("#themenFeld").val();
+        var examID = $(".selectedTrue").children().siblings().eq(0).text()
+        var duplicateData = false;
+
+        //CHECK FOR DUPLICATE ENTRIES
+        for(i of examData){
+          if(klausurKlasse == i.klassename && datum == i.datum && schulStunde == i.schulestunde && fach == i.fach && raumNr == i.raumnummer && themen == i.thema)
+            duplicateData = true;
+        }
+
+        //VALIDATE USER INPUT
+        if(fach.trim() == ""){
+          alert("Bitte geben Sie ein Fach ein");
+          $("#fachFeld").css("background-color","lightcoral");
+        }else if(datum < today){
+          alert("Ihr ausgewähltes Datum darf nicht in der Vergangenheit liegen");
+          $("#datum").css("background-color","lightcoral");
+        }else if(raumNr.trim() == ""){
+          alert("Bitte geben Sie eine Raumnummer ein");
+          $("#raumNrFeld").css("background-color","lightcoral");
+        }else if(themen.trim() == ""){
+          alert("Bitte geben Sie das Prüfungsthema ein");
+          $("#themenFeld").css("background-color","lightcoral");
+
+          //CHECK FOR DUPLICATE ENTRIES
+        }else if(duplicateData){
+          alert("Diese Klausur existiert bereits");
+
+        }else{
+          //GET THE ID OF THE CLASS FROM DATABASE
+          $.get( "http://localhost:8080/api/classes", function( data ) {
+            for(i of data){
+              if(klausurKlasse == i.name){
+                var klasseId = i.idklassen;
+              }
+            }
+            //UPDATE DATABASE WITH USER INPUT
+            $.ajax({
+              type: "PUT",
+              dataType:'json',
+              url: "http://localhost:8080/api/exams",
+              data: {"idklassen": klasseId, "idklausuren": examID, "klassename": klausurKlasse, "fach": fach.trim(), "datum": datum.trim(), "schulestunde": schulStunde, "raumnummer": raumNr, "thema": themen}
+            });
+          });
+          alert("Ihre augewahlte Klausur wurde erfolgreich aktualisiert");
+          location.reload();
+        }
+      }
+    }
+  });
+
+  //KLAUSUR-LOESCHEN-FUNKTION
+  $("#btnKlausurLoeschen").click(function(){
+
+    //MAKE SURE A KLAUSUR IS SELECTED
+    if (!klausurSelected){
+      alert("Bitte wählen Sie eine zu löschende Klausur aus");
+    }else{
+      //CAPTURE EXAM ID
+      var examID = $(".selectedTrue").children().siblings().eq(0).text()
+
+      if(confirm("Möchten Sie die " + $(".selectedTrue").children().siblings().eq(1).text() + " " + $(".selectedTrue").children().siblings().eq(2).text() + " Klausur wirklich aus der Datenbank löschen?")){
+        //REMOVE KLAUSUR FROM DATABASE
+        $.get("http://localhost:8080/api/exams/", function( data ) {
+          for(i of data){
+            if(examID == i.idklausuren){
+              $.ajax({
+                type: "DELETE",
+                dataType:'json',
+                url: "http://localhost:8080/api/exams/:id",
+                data: {"id": examID}
+              });
+            }
+          }
+          alert("Ihre augewahlte Klausur wurde erfolgreich gelöscht");
+          location.reload();
+        });
+      }
+    }
+  });
+
+  //ALLELOESCHEN-FUNKTION
+  $("#btnAlleLoeschen").click(function(){
+    //MAKE SURE EXAMS EVEN EXIST
+    if(examData.length <= 0){
+      alert("Es gibt keine Klausuren zum Löschen vorhanden");
+    }else{
+      confirm("Möchten Sie wirklich alle Klausuren aus der Datenbank löschen")
+
+      //DELETE ALL EXAMS FROM DATABASE
+      $.get("http://localhost:8080/api/exams/", function( data ) {
+        $.ajax({
+          type: "DELETE",
+          dataType:'json',
+          url: "http://localhost:8080/api/exams/:id",
+          data: {"id": 9999}
+        });
+
+        alert("Alle Klausuren wurden erfolgreich gelöscht");
+        location.reload();
+      });
+    }
+  });
+
+  //KLAUSUR EINTRAGEN FUNKTION
+  $("#btnKlausurEintragen").click(function() {
+
+    //VISUAL COLOUR FEEDBACK
+    $("#klausurKlasse").css("background-color","white");
+    $("#fachFeld").css("background-color","white");
+    $("#datum").css("background-color","white");
+    $("#schulStunde").css("background-color","white");
+    $("#raumNrFeld").css("background-color","white");
+    $("#themenFeld").css("background-color","white");
+
+    //SAVE ALL USER INPUT INTO VARIABLES
+    var klausurKlasse = $("#klausurKlasse").val();
+    var fach = $("#fachFeld").val();
+    var datum = $("#datum").val();
+    var schulStunde = $("#schulStunde").val();
+    var raumNr = $("#raumNrFeld").val();
+    var themen = $("#themenFeld").val();
+    var duplicateData = false;
+
+    //CHECK FOR DUPLICATE ENTRIES
+    for(i of examData){
+      if(klausurKlasse == i.klassename && datum == i.datum && schulStunde == i.schulestunde && fach == i.fach && raumNr == i.raumnummer && themen == i.thema)
+        duplicateData = true;
+    }
+
+    //VALIDATE USER INPUT
+    if(fach.trim() == ""){
+      alert("Bitte geben Sie ein Fach ein");
+      $("#fachFeld").css("background-color","lightcoral");
+    }else if(datum < today){
+      alert("Ihr ausgewähltes Datum darf nicht in der Vergangenheit liegen");
+      $("#datum").css("background-color","lightcoral");
+    }else if(raumNr.trim() == ""){
+      alert("Bitte geben Sie eine Raumnummer ein");
+      $("#raumNrFeld").css("background-color","lightcoral");
+    }else if(themen.trim() == ""){
+      alert("Bitte geben Sie das Prüfungsthema ein");
+      $("#themenFeld").css("background-color","lightcoral");
+
+      //CHECK FOR DUPLICATE ENTRIES
+    }else if(duplicateData){
+      alert("Diese Klausur existiert bereits");
+
+    }else{
+      //GET THE ID OF THE CLASS FROM CLASS TABLE
+      $.get( "http://localhost:8080/api/classes", function( data ) {
+        for(i of data){
+          if(klausurKlasse == i.name){
+            var klasseId = i.idklassen;
+          }
+        }
+        //ADD NEW KLAUSUR TO DATABASE
+        $.ajax({
+          type: "POST",
+          dataType:'json',
+          url: "http://localhost:8080/api/exams",
+          data: {"idklassen": klasseId, "lehrername": localStorage.getItem('lehrerNachname'), "klassename": klausurKlasse, "fach": fach.trim(), "datum": datum.trim(), "schulestunde": schulStunde, "raumnummer": raumNr, "thema": themen}
+        });
+      });
+      alert("Ihre Klausur wurde erfolgreich hinzugefügt");
+      location.reload();
+    }
+  });
+});
