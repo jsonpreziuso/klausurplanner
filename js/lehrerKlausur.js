@@ -6,58 +6,88 @@ Klausurplanner Projekt
 LF6 - Herr Grüning
 */
 $(document).ready(function() {
-  //INSERTION OF LEHRERNAME
-  //$("#lehrerName").val() == USE BACKEND SESSION VARIABLE TO GET THE LEHRERNAME AND SET IT HERE
-
-  //SET LEHRER NAME IN THE NAVBAR
-  //HERE THE SIGNED IN LEHRER'S NAME MUST BE TAKEN FROM DATABASE AND SET IN $("#lehrerTitelName")
-  $("#lehrerTitelName").text("TearTable - " + "LEHRER NAME")
+  //INSERTION OF LEHRERNAME IN HEADER
+  $("#lehrerTitelName").text("TearTable - " + localStorage.getItem('lehrerVorname') + " " + localStorage.getItem('lehrerNachname'));
 
   //LOGOUT FUNCTIONALITY
   $("#logout").click(function(){
-    //HERE WE NEED TO END THE SESSION VARIABLE ON THE BACKEND
+    localStorage.setItem('lehrerVorname',"");
+    localStorage.setItem('lehrerNachname',"");
+    localStorage.setItem('lehrerEmail',"");
+    localStorage.setItem('lehrerId',"");
+    localStorage.setItem('lehrerAdmin',"");
   });
 
-//KLAUSUR VERWALTUNG SEITE
+  //AUTOFILL DATATABLE
+  examData = {};
+  $.get("http://localhost:8080/api/exams", function( data ) {
+    examData = data;
+    $('#lehrerKlausurTabelle').DataTable({
+          "processing" : true,
+          "ajax" : {
+              "url" : "http://localhost:8080/api/exams",
+              dataSrc : ''
+          },
+          "columns" : [ {
+              "data" : "idklausuren"
+          },{
+              "data" : "lehrername"
+          },{
+              "data" : "klassename"
+          },{
+              "data" : "fach"
+          },{
+              "data" : "datum"
+          },{
+              "data" : "schulestunde"
+          },{
+              "data" : "raumnummer"
+          },{
+              "data" : "thema"
+          }]
+    });
+  });
 
-  //DATATABLE MANAGEMENT
-  var lehrerKlausurTabelle = $('#lehrerKlausurTabelle').DataTable();
+  //FILL CLASS SELECTOR
+  $.get("http://localhost:8080/api/classes", function( data ) {
+    for(i of data){
+      $('#klausurKlasse').append($('<option>', {
+        value: i.name,
+        text: i.name
+      }));
+    }
+  });
+
+  //SET DEFAULT DATE TO TODAY'S DATE
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var year = now.getFullYear();
+  var today = (year)+"-"+(month)+"-"+(day);
+  $('#datum').val(today);
+
+  //HIGHLIGHT DATATABLE ROW ON SELECT
   var klausurSelected = false;
-
-  //HERE ALL TABLE DATA HAS TO BE TAKEN FROM THE DATABASE AND INSERTED INTO THE
-  //TABLE DYNAMICALLY. EACH DYNAMICALLY CREATED <TR> NEEDS TO BE GIVEN AN "ID" WHICH
-  //SHOULD BE EQUAL TO THE DATABASE ROW ID. WITHIN EACH <TR>, EVERY <TD> HAS TO BE
-  //GIVEN AN "ID" OF "klasseRow, fachRow, datumRow, stundeRow, raumRow, themaRow"
-  //RESPECTIVELY, WITH IT'S PARENT <TR> ID BEING ADDED TO THE END OF EACH ONE
-  //E.G. IF <TR id="5">, THEN ALL <TD>s SHOULD HAVE "5" ADDED TO THE END
-  //<TR id="5"><TD id="klasseRow5"></TD>, <TD id="fachRow5"></TD> ... etc </TR>
-
-  $('#lehrerKlausurTabelle td').click(function(){
-
+  $('#lehrerKlausurTabelle').on("click","td",function(){
     klausurSelected = true;
     $('#lehrerKlausurTabelle tr').css("background-color","");
-    $('#lehrerKlausurTabelle tr').removeAttr("selected");
+    $('#lehrerKlausurTabelle tr').removeAttr("class");
     $(this).parent().css("background-color","#a5dee8");
-    $(this).parent().attr("selected","true");
+    $(this).parent().attr("class","selectedTrue");
 
-/*
-    ALL THIS WILL ONLY WORK ONCE TABLE IS GENERATED WITH DATABASE DATA
-
-    //AUTOFILL VALUES
-    var row_index = $(this).parent().attr("id");
-    $("#klausurKlasse").val($("#klasseRow"+row_index).text());
-    $("#fachFeld").val($("#fachRow"+row_index).text());
-    $("#datum").val($("#datumRow"+row_index).text());
-    $("#schulStunde").val($("#stundeRow"+row_index).text());
-    $("#raumNrFeld").val($("#raumRow"+row_index).text());
-    $("#themenFeld").val($("#themaRow"+row_index).text());
-  */
+    //AUTOFILL SELECTED ROW DATA INTO FIELDS
+    $("#klausurKlasse").val($(".selectedTrue").children().siblings().eq(2).text());
+    $("#fachFeld").val($(".selectedTrue").children().siblings().eq(3).text());
+    $("#datum").val($(".selectedTrue").children().siblings().eq(4).text());
+    $("#schulStunde").val($(".selectedTrue").children().siblings().eq(5).text());
+    $("#raumNrFeld").val($(".selectedTrue").children().siblings().eq(6).text());
+    $("#themenFeld").val($(".selectedTrue").children().siblings().eq(7).text());
   });
 
   //KLAUSUR-AENDERN-FUNKTION
   $("#btnKlausurAendern").click(function(){
 
-    //RESET BACKGROUND COLOURS BACK TO WHITE
+    //VISUAL COLOUR FEEDBACK
     $("#klausurKlasse").css("background-color","white");
     $("#fachFeld").css("background-color","white");
     $("#datum").css("background-color","white");
@@ -65,18 +95,27 @@ $(document).ready(function() {
     $("#raumNrFeld").css("background-color","white");
     $("#themenFeld").css("background-color","white");
 
+    //MAKE SURE A KLAUSUR IS SELECTED
     if (!klausurSelected){
       alert("Bitte wählen Sie eine Klausur aus");
     }else{
-      if(confirm("Möchten Sie + GET LEHRERNAME + GET FACHNAME + Klausur wirklich ändern?")){
+      if(confirm("Möchten Sie die " + $(".selectedTrue").children().siblings().eq(1).text() + " " + $(".selectedTrue").children().siblings().eq(2).text() + " Klausur wirklich ändern?")){
 
         //SAVE ALL USER INPUT INTO VARIABLES
-        var klausurKlasse = $("#klausurklasse").val();
+        var klausurKlasse = $("#klausurKlasse").val();
         var fach = $("#fachFeld").val();
         var datum = $("#datum").val();
         var schulStunde = $("#schulStunde").val();
         var raumNr = $("#raumNrFeld").val();
         var themen = $("#themenFeld").val();
+        var examID = $(".selectedTrue").children().siblings().eq(0).text()
+        var duplicateData = false;
+
+        //CHECK FOR DUPLICATE ENTRIES
+        for(i of examData){
+          if(klausurKlasse == i.klassename && datum == i.datum && schulStunde == i.schulestunde && fach == i.fach && raumNr == i.raumnummer && themen == i.thema)
+            duplicateData = true;
+        }
 
         //VALIDATE USER INPUT
         if(fach.trim() == ""){
@@ -91,22 +130,29 @@ $(document).ready(function() {
         }else if(themen.trim() == ""){
           alert("Bitte geben Sie das Prüfungsthema ein");
           $("#themenFeld").css("background-color","lightcoral");
-        }else if(false/* SQL QUERY TO CHECK IF THIS KLAUSUR ALREADY EXISTS IN THE DATABASE*/){
+
+          //CHECK FOR DUPLICATE ENTRIES
+        }else if(duplicateData){
           alert("Diese Klausur existiert bereits");
+
         }else{
-          $("#klausurKlasse").css("background-color","lightgreen");
-          $("#fachFeld").css("background-color","lightgreen");
-          $("#datum").css("background-color","lightgreen");
-          $("#schulStunde").css("background-color","lightgreen");
-          $("#raumNrFeld").css("background-color","lightgreen");
-          $("#themenFeld").css("background-color","lightgreen");
-
-          //HERE ALL DATABASE VALUES HAVE TO BE UPDATED FOR THE SELECTED KLAUSUR
-          //WHERE THE <TR> ID (REPRESENTED BY "var row_index") MATCHES THE ROW ID IN THE DATABASE
-
+          //GET THE ID OF THE CLASS FROM DATABASE
+          $.get( "http://localhost:8080/api/classes", function( data ) {
+            for(i of data){
+              if(klausurKlasse == i.name){
+                var klasseId = i.idklassen;
+              }
+            }
+            //UPDATE DATABASE WITH USER INPUT
+            $.ajax({
+              type: "PUT",
+              dataType:'json',
+              url: "http://localhost:8080/api/exams",
+              data: {"idklassen": klasseId, "idklausuren": examID, "klassename": klausurKlasse, "fach": fach.trim(), "datum": datum.trim(), "schulestunde": schulStunde, "raumnummer": raumNr, "thema": themen}
+            });
+          });
           alert("Ihre augewahlte Klausur wurde erfolgreich aktualisiert");
-
-          //DATATABLE.RELOAD();
+          location.reload();
         }
       }
     }
@@ -114,118 +160,61 @@ $(document).ready(function() {
 
   //KLAUSUR-LOESCHEN-FUNKTION
   $("#btnKlausurLoeschen").click(function(){
+
+    //MAKE SURE A KLAUSUR IS SELECTED
     if (!klausurSelected){
       alert("Bitte wählen Sie eine zu löschende Klausur aus");
     }else{
-      if(confirm("Möchten Sie + GET LEHRERNAME + GET FACHNAME + Klausur wirklich aus der Datenbank löschen?")){
+      //CAPTURE EXAM ID
+      var examID = $(".selectedTrue").children().siblings().eq(0).text()
 
-      //IF YES THEN DELETE ENTIRE ROW FROM DATABASE WHERE WHERE THE <TR> ID (REPRESENTED BY "var row_index")
-      //MATCHES THE ROW ID IN THE DATABASE
-      alert("Ihre augewahlte Klausur wurde erfolgreich gelöscht");
-      //DATATABLE.RELOAD();
+      if(confirm("Möchten Sie die " + $(".selectedTrue").children().siblings().eq(1).text() + " " + $(".selectedTrue").children().siblings().eq(2).text() + " Klausur wirklich aus der Datenbank löschen?")){
+        //REMOVE KLAUSUR FROM DATABASE
+        $.get("http://localhost:8080/api/exams/", function( data ) {
+          for(i of data){
+            if(examID == i.idklausuren){
+              $.ajax({
+                type: "DELETE",
+                dataType:'json',
+                url: "http://localhost:8080/api/exams/:id",
+                data: {"id": examID}
+              });
+            }
+          }
+          alert("Ihre augewahlte Klausur wurde erfolgreich gelöscht");
+          location.reload();
+        });
       }
     }
   });
-
 
   //ALLELOESCHEN-FUNKTION
   $("#btnAlleLoeschen").click(function(){
-    if(confirm("Möchten Sie wirklich alle Klausuren aus der Datenbank löschen")){
-
-      //IF YES THEN DELETE ALL DATABASE ENTIRES
-
-      //DATATABLE.RELOAD();
-      alert("Alle Klausuren wurden erfolgreich gelöscht");
-    }
-  });
-
-  //ZEITRAUMLOESCHEN-FUNKTION
-
-  //SET DEFAULT DATE TO TODAY'S FOR datumBeginn and datumsEnde
-  var now = new Date();
-  var day = ("0" + now.getDate()).slice(-2);
-  var month = ("0" + (now.getMonth() + 1)).slice(-2);
-  var year = now.getFullYear();
-  var today = (year)+"-"+(month)+"-"+(day);
-  $('#datumBeginn').val(today);
-
-  var now = new Date();
-  var day = ("0" + now.getDate()).slice(-2);
-  var month = ("0" + (now.getMonth() + 1)).slice(-2);
-  var year = now.getFullYear();
-  var today = (year)+"-"+(month)+"-"+(day);
-  $('#datumEnde').val(today);
-
-  //TURN DATUMBEGINN INTO A DATE OBJECT
-  $('#datumBeginn').change(function(){
-    var datumBeginn = $("#datumBeginn").val();
-    datumBeginn = new Date(datumBeginn);
-    var datumBeginnDay = ("0" + datumBeginn.getDate()).slice(-2);
-    var datumBeginnMonth = ("0" + (datumBeginn.getMonth() + 1)).slice(-2);
-    var datumBeginnYear = datumBeginn.getFullYear();
-    datumBeginn = (datumBeginnYear)+"-"+(datumBeginnMonth)+"-"+(datumBeginnDay);
-    });
-    //TURN DATUMENDE INTO A DATE OBJECT
-  $('#datumEnde').change(function(){
-    var datumEnde = $("#datumEnde").val();
-    datumEnde = new Date(datumEnde);
-    var datumEndeDay = ("0" + datumEnde.getDate()).slice(-2);
-    var datumEndeMonth = ("0" + (datumEnde.getMonth() + 1)).slice(-2);
-    var datumEndeYear = datumEnde.getFullYear();
-    datumEnde = (datumEndeYear)+"-"+(datumEndeMonth)+"-"+(datumEndeDay);
-  });
-
-  //ZeitraumLoeschen BUTTON CLICKED
-  $("#btnZeitraumLoeschen").click(function(){
-
-    $("#datumBeginn").css("background-color","white");
-    $("#datumEnde").css("background-color","white");
-
-    if($("#datumEnde").val() < $("#datumBeginn").val()){
-      alert("Ihr ausgewähltes Ende-Datum darf nicht früher als dein Beginn-Datum sein");
-      $("#datumBeginn").css("background-color","lightcoral");
-      $("#datumEnde").css("background-color","lightcoral");
+    //MAKE SURE EXAMS EVEN EXIST
+    if(examData.length <= 0){
+      alert("Es gibt keine Klausuren zum Löschen vorhanden");
     }else{
-      if(confirm("Möchten Sie wirklich alle Klausuren zwischen " + $("#datumBeginn").val() + " und " + $("#datumEnde").val() +  " aus der Datenbank löschen?")){
+      confirm("Möchten Sie wirklich alle Klausuren aus der Datenbank löschen")
 
-        //IF YES THEN DELETE ALL DATABASE ENTRIES BETWEEN THE 2 SELECTED DATES
-        $("#datumBeginn").css("background-color","lightgreen");
-        $("#datumEnde").css("background-color","lightgreen");
-        alert("Alle Klausuren zwischen " + $("#datumBeginn").val() + " und " + $("#datumEnde").val() + " wurden erfolgreich gelöscht");
-        //DATATABLE.RELOAD();
-      }
-    }
-  });
+      //DELETE ALL EXAMS FROM DATABASE
+      $.get("http://localhost:8080/api/exams/", function( data ) {
+        $.ajax({
+          type: "DELETE",
+          dataType:'json',
+          url: "http://localhost:8080/api/exams/:id",
+          data: {"id": 9999}
+        });
 
-  //SET DEFAULT DATE TO TODAY'S DATE
-  var now = new Date();
-  var day = ("0" + now.getDate()).slice(-2);
-  var month = ("0" + (now.getMonth() + 1)).slice(-2);
-  var year = now.getFullYear();
-  var today = (year)+"-"+(month)+"-"+(day);
-  $('#datum').val(today);
-
-  //CAPTURE USER INPUTTED DATE AND CONVERT TO DATE OBJECT
-  $('#datum').change(function(){
-    var datum = $("#datum").val();
-    datum = new Date(datum);
-    var datumDay = ("0" + datum.getDate()).slice(-2);
-    var datumMonth = ("0" + (datum.getMonth() + 1)).slice(-2);
-    var datumYear = datum.getFullYear();
-    datum = (datumYear)+"-"+(datumMonth)+"-"+(datumDay);
-
-    //DATE INPUT VALIDATION
-    if(datumYear > year+5){
-      alert("Klausuren, die länger als 5 Jahre in der Zukunft stattfinden sollen, können nicht erstellt werden");
-      $("#datum").css("background-color","lightcoral");
-      $('#datum').val(today);
+        alert("Alle Klausuren wurden erfolgreich gelöscht");
+        location.reload();
+      });
     }
   });
 
   //KLAUSUR EINTRAGEN FUNKTION
   $("#btnKlausurEintragen").click(function() {
 
-    //RESET BACKGROUND COLOURS BACK TO WHITE
+    //VISUAL COLOUR FEEDBACK
     $("#klausurKlasse").css("background-color","white");
     $("#fachFeld").css("background-color","white");
     $("#datum").css("background-color","white");
@@ -234,12 +223,19 @@ $(document).ready(function() {
     $("#themenFeld").css("background-color","white");
 
     //SAVE ALL USER INPUT INTO VARIABLES
-    var klausurKlasse = $("#klausurklasse").val();
+    var klausurKlasse = $("#klausurKlasse").val();
     var fach = $("#fachFeld").val();
     var datum = $("#datum").val();
     var schulStunde = $("#schulStunde").val();
     var raumNr = $("#raumNrFeld").val();
     var themen = $("#themenFeld").val();
+    var duplicateData = false;
+
+    //CHECK FOR DUPLICATE ENTRIES
+    for(i of examData){
+      if(klausurKlasse == i.klassename && datum == i.datum && schulStunde == i.schulestunde && fach == i.fach && raumNr == i.raumnummer && themen == i.thema)
+        duplicateData = true;
+    }
 
     //VALIDATE USER INPUT
     if(fach.trim() == ""){
@@ -254,20 +250,29 @@ $(document).ready(function() {
     }else if(themen.trim() == ""){
       alert("Bitte geben Sie das Prüfungsthema ein");
       $("#themenFeld").css("background-color","lightcoral");
-    }else if(false/* SQL QUERY TO CHECK IF THIS KLAUSUR ALREADY EXISTS IN THE DATABASE*/){
-      alert("Diese Klausur existiert bereits");
-    }else{
-      alert("Ihre Klausur wurde erfolgreich hinzugefügt");
-      $("#klausurKlasse").css("background-color","lightgreen");
-      $("#fachFeld").css("background-color","lightgreen");
-      $("#datum").css("background-color","lightgreen");
-      $("#schulStunde").css("background-color","lightgreen");
-      $("#raumNrFeld").css("background-color","lightgreen");
-      $("#themenFeld").css("background-color","lightgreen");
-      //HERE UPDATE THE DATABASE WITH THE NEWLY ENTERED DATA
-      //LEHRER NACHNAME ALSO HAS TO BE TAKEN FROM THE BACKEND AND ADDED TO THE DATABASE ENTRY
 
-      //DATATABLE.RELOAD();
+      //CHECK FOR DUPLICATE ENTRIES
+    }else if(duplicateData){
+      alert("Diese Klausur existiert bereits");
+
+    }else{
+      //GET THE ID OF THE CLASS FROM CLASS TABLE
+      $.get( "http://localhost:8080/api/classes", function( data ) {
+        for(i of data){
+          if(klausurKlasse == i.name){
+            var klasseId = i.idklassen;
+          }
+        }
+        //ADD NEW KLAUSUR TO DATABASE
+        $.ajax({
+          type: "POST",
+          dataType:'json',
+          url: "http://localhost:8080/api/exams",
+          data: {"idklassen": klasseId, "lehrername": localStorage.getItem('lehrerNachname'), "klassename": klausurKlasse, "fach": fach.trim(), "datum": datum.trim(), "schulestunde": schulStunde, "raumnummer": raumNr, "thema": themen}
+        });
+      });
+      alert("Ihre Klausur wurde erfolgreich hinzugefügt");
+      location.reload();
     }
   });
 });
