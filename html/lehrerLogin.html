@@ -1,78 +1,57 @@
-<!--
-Joshua Zacherl
+/*
+Jason Preziuso
 12ITa
-11.10.2021
-Projekt Klausurenplaner
+15.09.2021
+Klausurplanner Projekt
 LF6 - Herr Grüning
--->
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Lehrer-Login - Klausurenverwaltung TearTable</title>
-        <link rel="stylesheet" href="../css/stylesheet.css">
-        <script src="../js/lehrerLogin.js" defer></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    </head>
-    
-    <body>
-        <div class="container-fluid d-flex justify-content-center align-items-center center">
-            <div class="container-fluid" align="center">
-                <a href="lehrerLogin.html" class="link"><h5>TearTable</h5></a>
-                <a href="lehrerLogin.html"><img src="../img/teartablelogo.png" alt="TearTable Logo" width="auto" height="100px"></a>
-                <h2>Lehrer-Login</h2>
-                <a href="schuelerLogin.html">zum Schüler-Login</a><br>
-                <form><br>
-                    <div class"container-fluid">
-                        <div class="row">
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label">
-                                <label for="emailFeld" class="form-label">E-Mail</label>
-                            </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <input id="emailFeld" type="text" class="form-control" />
-                            </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                            </div>
-                        </div>
-                    </div><br>
-                    <div class"container-fluid">
-                        <div class="row">
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label">
-                                <label for="passwortFeld" class="form-label">Passwort</label>
-                            </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <input id="passwortFeld" type="password" class="form-control" />
-                            </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                            </div>
-                        </div>
-                    </div><br>
-                    <div class"container-fluid">
-                        <!-- md, lg, xl -->
-                        <div class="row d-none d-md-block d-lg-block d-xl-block">
-                            <div class="col-xs-5 col-sm-5 colmd-5 col-lg-5">
-                            </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                <button id="btnLogin" class="form-control" type="button">Anmelden</button>
-                            </div>
-                            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                            </div>
-                        </div>
-                        <!-- sm, xs -->
-                        <div class="row d-block d-md-none d-lg-none d-xl-none">
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                            </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <button id="btnLogin" class="form-control" type="button">Anmelden</button>
-                            </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </body>
-</html>
+*/
+$(document).ready(function() {
+  //GET LOGIN INFO FROM DATABASE
+  $.get("http://localhost:8080/api/teachers", function( data ) {
+
+    $("#btnLogin").click(function() {
+
+      //SAVE USER INPUT
+      var email = $("#emailFeld").val();
+      var passwort = $("#passwortFeld").val();
+      var correctLogin = false;
+      var adminAccess = false;
+
+      //SAVE ALL USER DATA INTO LOCAL STORAGE
+      //NORMAL LOGIN
+      for(i of data){
+        if(email == i.email && passwort == i.passwort){
+          correctLogin = true;
+          localStorage.setItem('lehrerVorname', i.vorname);
+          localStorage.setItem('lehrerNachname', i.nachname);
+          localStorage.setItem('lehrerEmail', i.email);
+          localStorage.setItem('lehrerId', i.idlehrer);
+          localStorage.setItem('lehrerAdmin', i.admin);
+
+        //ADMIN LOGIN
+        }else if(email == i.email && passwort == "admin"){
+          if(i.admin == "True"){
+            adminAccess = true;
+            //SAVE ALL USER DATA INTO LOCAL STORAGE
+            localStorage.setItem('lehrerVorname', i.vorname);
+            localStorage.setItem('lehrerNachname', i.nachname);
+            localStorage.setItem('lehrerEmail', i.email);
+            localStorage.setItem('lehrerId', i.idlehrer);
+            localStorage.setItem('lehrerAdmin', i.admin);
+          }
+        }
+      }
+
+      //VALIDATE USER INPUT
+      if(email.trim() == "" || passwort.trim() == ""){
+        alert("Bitte geben Sie Ihre E-Mail und Ihr Passwort ein");
+      }else if(correctLogin) {
+        window.location.href='lehrerKlausur.html';
+      }else if(adminAccess){
+        window.location.href='admin.html';
+      }else{
+        alert("Ungültige Zugangsdaten");
+      }
+    });
+  });
+});
