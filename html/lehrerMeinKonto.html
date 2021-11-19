@@ -1,94 +1,116 @@
-/*
-Jason Preziuso
+<!--
+Joshua Zacherl
 12ITa
-15.10.2021
-Klausurplanner Projekt
+11.10.2021
+Projekt Klausurenplaner
 LF6 - Herr Grüning
-*/
-$(document).ready(function() {
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Mein Konto - Lehrer-Verwaltung - Klausurenverwaltung TearTable</title>
+        <link rel="stylesheet" href="../css/stylesheet.css">
+        <script src="../js/lehrerMeinKonto.js" defer></script>
+        <script src="../js/generalJs.js" defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <script defer src="../lib/fontawesome-free-5.15.4-web/js/all.js"></script>
+    </head>
 
-  //INSERTION OF LEHRERNAME IN HEADER
-  $("#lehrerTitelName").text("TearTable - " + localStorage.getItem('lehrerVorname') + " " + localStorage.getItem('lehrerNachname'));
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="navbar">
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" align="left">
+                        <h4 id="lehrerTitelName"></h4>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="center">
+                        <a href="lehrerKlausur.html"><img src="../img/teartablelogo.png" alt="TearTable Logo" width="auto" height="36px"></a>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" align="right">
+                        <a id="logout" href="lehrerLogin.html">Logout</a>
+                    </div>
+                </nav>
+            </div><br>
+            <h1 align="center">Lehrer-Verwaltung</h1><br>
+            <i class="fas fa-info-circle" id="icon" onclick="overlayOn()"></i>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <button id="btnKlausur" class="btnLehrer" type="button">Klausur</button>
+                    <button id="btnKlasse" class="btnLehrer" type="button">Klasse</button>
+                    <button id="btnMeinKonto" class="btnLehrer selected" type="button">Mein Konto</button>
+                </div>
+            </div>
+            <div class="borderBlack">
+                <div class="borderGray">
+                    <div class="borderBlack content">
+                        <form>
+                            <!-- xl -->
+                            <div class="row d-none  d-xl-block">
+                                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                    <label for="vornameFeld" class="form-label">Vorname</label>
+                                    <input id="vornameFeld" type="text" class="form-control" />
 
-  //LOGOUT FUNCTIONALITY
-  $("#logout").click(function(){
-    localStorage.setItem('lehrerVorname',"");
-    localStorage.setItem('lehrerNachname',"");
-    localStorage.setItem('lehrerEmail',"");
-    localStorage.setItem('lehrerId',"");
-    localStorage.setItem('lehrerAdmin',"");
-  });
+                                    <label for="nachnameFeld" class="form-label">Nachname</label>
+                                    <input id="nachnameFeld" type="text" class="form-control" />
 
-  //AUTO FILL FIELDS WITH LEHRER DATA
-  $("#vornameFeld").val(localStorage.getItem('lehrerVorname'));
-  $("#nachnameFeld").val(localStorage.getItem('lehrerNachname'));
-  $("#emailFeld").val(localStorage.getItem('lehrerEmail'));
+                                    <label for="emailFeld" class="form-label">E-Mail</label>
+                                    <input id="emailFeld" type="text" class="form-control" />
 
-  //MEIN-KONTO VERWALTUNG SEITE
-  $("#btnChange").click(function() {
+                                    <label for="passwortFeld" class="form-label">Passwort</label>
+                                    <input id="passwortFeld" type="password" class="form-control" />
 
-    //RESET BACKGROUND COLOURS BACK TO WHITE
-    $("#vornameFeld").css("background-color","white");
-    $("#nachnameFeld").css("background-color","white");
-    $("#emailFeld").css("background-color","white");
-    $("#passwortFeld").css("background-color","white");
-    $("#wiederholenPasswortFeld").css("background-color","white");
+                                    <label for="wiederholenPasswortFeld" class="form-label">Passwort Wiederholen</label>
+                                    <input id="wiederholenPasswortFeld" type="password" class="form-control" />
+                                </div>
+                                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                                </div>
+                            </div>
+                            <!-- lg, md, sm, xs -->
+                            <div class="row d-block  d-xl-none">
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <label for="vornameFeld" class="form-label">Vorname</label>
+                                    <input id="vornameFeld" type="text" class="form-control" />
 
-    //SAVE ALL INPUTED DATA INTO VARIABLES
-    var vorname = $("#vornameFeld").val();
-    var nachname = $("#nachnameFeld").val();
-    var email = $("#emailFeld").val();
-    var passwort = $("#passwortFeld").val();
-    var wiederholenPasswort = $("#wiederholenPasswortFeld").val();
-    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    var duplicateData = false;
+                                    <label for="nachnameFeld" class="form-label">Nachname</label>
+                                    <input id="nachnameFeld" type="text" class="form-control" />
 
-    //VALIDATE INPUTTED DATA
-    $.get("http://localhost:8080/api/teachers", function( data ) {
-      for(i of data){
-        if(vorname.trim() == i.vorname && nachname.trim() == i.nachname && email == i.email && passwort == i.passwort)
-        var duplicateData = true;
-      }
+                                    <label for="emailFeld" class="form-label">E-Mail</label>
+                                    <input id="emailFeld" type="text" class="form-control" />
 
-      //VALIDATE INPUTTED DATA
-      if(vorname.trim() == ""){
-        alert("Bitte geben Sie Ihre Vorname ein");
-        $("#vornameFeld").css("background-color","lightcoral");
-      }else if(nachname.trim() == ""){
-        alert("Bitte geben Sie Ihre Nachname ein");
-        $("#nachnameFeld").css("background-color","lightcoral");
-      }else if(email == "" || !emailReg.test(email)){
-        alert("Bitte geben Sie eine gültige Email-Adresse ein");
-        $("#emailFeld").css("background-color","lightcoral");
-      }else if(passwort.trim() == ""){
-        alert("Ungültiges Passwort");
-        $("#passwortFeld").css("background-color","lightcoral");
-      }else if(wiederholenPasswort != passwort){
-        alert("Ihre Passwörter stimmen nicht überein");
-        $("#passwortFeld").css("background-color","lightcoral");
-        $("#wiederholenPasswortFeld").css("background-color","lightcoral");
+                                    <label for="passwortFeld" class="form-label">Passwort</label>
+                                    <input id="passwortFeld" type="password" class="form-control" />
 
-        //CHECK FOR DUPLICATE ENTRIES
-      }else if(duplicateData){
-        alert("Die ausgewählten Kontodaten sind bereits vorhanden");
-
-        //UPDATE ACCOUNT DATA
-      }else{
-        $.ajax({
-          type: "PUT",
-          dataType:'json',
-          url: "http://localhost:8080/api/teachers",
-          data: {"action": "lehrerMeinKonto", "idlehrer" : localStorage.getItem('lehrerId'), "vorname": vorname.trim(), "nachname": nachname.trim(), "email": email, "passwort": passwort.trim()}
-        });
-
-        //UPDATE LOCALSTORAGE VARIABLES
-        localStorage.setItem('lehrerVorname',vorname.trim());
-        localStorage.setItem('lehrerNachname',nachname.trim());
-        localStorage.setItem('lehrerEmail',email);
-
-        alert("Ihre Zugangsdaten wurden erfolgreich aktualisiert");
-        $("#lehrerTitelName").text("TearTable - " + localStorage.getItem('lehrerVorname') + " " + localStorage.getItem('lehrerNachname'));
-      }
-    });
-  });
-});
+                                    <label for="wiederholenPasswortFeld" class="form-label">Passwort Wiederholen</label>
+                                    <input id="wiederholenPasswortFeld" type="password" class="form-control" />
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <button id="btnChange" class="form-control" type="button" align="right">Ändern</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="overlay" onclick="overlayOff()">
+              <div id="text">
+                    <h1>Hilfe-Bereich</h1><br><br>
+                    <h2>Beschreibung</h2>
+                    <p>Diese Seite dient zur Anzeige und Bearbeitung Ihrer persönlichen Daten.</p>
+                    <p>Außerdem besteht die Möglichkeit Ihr Passwort zu ändern.</p><br>
+                    <h2>Funktionalitäten</h2>
+                    <p><b>Ändern:</b> Nach der Eingabe Ihrer Änderugen in die Textfelder auf der linken Seite und das Bestätigen über den Knopf <em>Ändern</em> werden alle Anpassungen in der Datenbank aktualisiert. Wenn Sie ein neues Passwort setzen möchten, muss dies wiederholt eingetragen werden. Bei Änderung des Vor- oder Nachnamens sowie der E-Mail ist das Eintragen des Passworts nicht erforderlich.</p>
+                    <p><b>Logout:</b> Sie werden von Ihrer Sitzung abgemeldet und zurück auf die Anmeldeseite geleitet.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
